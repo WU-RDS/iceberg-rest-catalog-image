@@ -27,13 +27,21 @@ RUN \
 
 COPY --from=builder --chown=iceberg:iceberg /app/build/libs/iceberg-rest-image-all.jar /usr/lib/iceberg-rest/iceberg-rest-image-all.jar
 
+# env vars prefixed with CATALOG_ are forwarded to the catalog that is used 'under the hood' (e.g. JDBC catalog)
+# the catalog implementation to use 'under the hood'
 ENV CATALOG_CATALOG__IMPL=org.apache.iceberg.jdbc.JdbcCatalog
-ENV CATALOG_URI=jdbc:sqlite:file:/tmp/iceberg_rest_mode=memory
+# the catalog IO implementation to use - need to set to org.apache.iceberg.aws.s3.S3FileIO if data should be stored in S3
+ENV CATALOG_IO__IMPL=org.apache.iceberg.aws.s3.S3FileIO
+# config specific to JDBC catalog
+# use in-memory SQLite DB per default
+ENV CATALOG_URI=jdbc:sqlite::memory:
 ENV CATALOG_JDBC_USER=user
 ENV CATALOG_JDBC_PASSWORD=password
-ENV REST_PORT=8181
 
+# Port on which server should listen
+ENV REST_PORT=8181
 EXPOSE $REST_PORT
+
 USER iceberg:iceberg
 ENV LANG en_US.UTF-8
 WORKDIR /usr/lib/iceberg-rest

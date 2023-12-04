@@ -38,7 +38,7 @@ dependencies {
 
 jar {
   manifest {
-    attributes 'Main-Class': 'org.apache.iceberg.rest.RESTCatalogServer'
+    attributes 'Main-Class': 'org.wurds.iceberg.rest.RESTCatalogServer'
   }
 }
 

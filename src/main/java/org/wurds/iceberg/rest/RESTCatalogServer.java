@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.iceberg.rest;
+package org.wurds.iceberg.rest;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +28,8 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.iceberg.CatalogProperties;
 import org.apache.iceberg.CatalogUtil;
 import org.apache.iceberg.catalog.Catalog;
+import org.apache.iceberg.rest.RESTCatalogAdapter;
+import org.apache.iceberg.rest.RESTCatalogServlet;
 import org.apache.iceberg.util.PropertyUtil;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.gzip.GzipHandler;
@@ -64,8 +66,9 @@ public class RESTCatalogServer {
     // Fallback to a JDBCCatalog impl if one is not set
     catalogProperties.putIfAbsent(
         CatalogProperties.CATALOG_IMPL, "org.apache.iceberg.jdbc.JdbcCatalog");
+    // use in-memory SQLite DB per default
     catalogProperties.putIfAbsent(
-        CatalogProperties.URI, "jdbc:sqlite:file:/tmp/iceberg_rest_mode=memory");
+        CatalogProperties.URI, "jdbc:sqlite::memory:");
 
     // Configure a default location if one is not specified
     String warehouseLocation = catalogProperties.get(CatalogProperties.WAREHOUSE_LOCATION);
